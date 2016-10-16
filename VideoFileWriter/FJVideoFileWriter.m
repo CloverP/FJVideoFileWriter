@@ -173,19 +173,22 @@ CFMutableArrayRef CreateDispatchHoldingArray() {
         switch (_videoSource) {
             case FJ_FILE: {
                 NSDictionary *videoSettings = [NSDictionary dictionaryWithObjectsAndKeys:AVVideoCodecH264, AVVideoCodecKey,
-                                               [NSNumber numberWithInt:_videoSize.width], AVVideoWidthKey,
-                                               [NSNumber numberWithInt:_videoSize.height], AVVideoHeightKey, nil];
+                                               [NSNumber numberWithInt:_videoSize.width*2], AVVideoWidthKey,
+                                               [NSNumber numberWithInt:_videoSize.height*2], AVVideoHeightKey, nil];
                 _writerInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeVideo outputSettings:videoSettings];
                 _writerInput.transform = CGAffineTransformMakeRotation(M_PI/2);
             }
 
                 break;
             case FJ_DATA: {
+//                NSDictionary *videoSettings = [NSDictionary dictionaryWithObjectsAndKeys:AVVideoCodecH264, AVVideoCodecKey,
+//                                               [NSNumber numberWithInt:_videoSize.width*2], AVVideoWidthKey,
+//                                               [NSNumber numberWithInt:_videoSize.height*2], AVVideoHeightKey, nil];
                 NSDictionary *videoSettings = [NSDictionary dictionaryWithObjectsAndKeys:AVVideoCodecH264, AVVideoCodecKey,
-                                               [NSNumber numberWithInt:_videoSize.width], AVVideoWidthKey,
-                                               [NSNumber numberWithInt:_videoSize.height], AVVideoHeightKey, nil];
+                                               [NSNumber numberWithInt:_videoSize.width*2], AVVideoWidthKey,
+                                               [NSNumber numberWithInt:_videoSize.height*2], AVVideoHeightKey, nil];
                 _writerInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeVideo outputSettings:videoSettings];
-                _writerInput.transform = CGAffineTransformMakeRotation(M_PI*2);
+                _writerInput.transform = CGAffineTransformMakeRotation(M_PI/2);
             }
 
                 break;
