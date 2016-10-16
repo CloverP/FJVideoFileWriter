@@ -58,7 +58,7 @@ CFMutableArrayRef CreateDispatchHoldingArray();
                     andVideoSize:(CGSize) videoSize {
     if (self  = [super init]) {
         if (!fileUrl) {
-            NSString *fileName = [NSString stringWithFormat:@"%f.m4v",[[NSDate date] timeIntervalSince1970]];
+            NSString *fileName = [NSString stringWithFormat:@"%ld.m4v",(long)[[NSDate date] timeIntervalSince1970]];
             NSString *betaCompressionDirectory = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:fileName];
             _fileUrl = [NSURL fileURLWithPath:betaCompressionDirectory];
         } else if ([fileUrl.absoluteString isEqualToString:_fileUrl.absoluteString]) {
@@ -82,7 +82,7 @@ CFMutableArrayRef CreateDispatchHoldingArray();
         
         _isAdding = NO;
         _frameCount = 0;
-        
+        _videoFPS = 30;
         [self setupVideoWriter];
     }
     return  self;
@@ -100,7 +100,7 @@ CFMutableArrayRef CreateDispatchHoldingArray();
 - (void) stopWriting {
     [_writerInput markAsFinished];
     [_videoWriter finishWritingWithCompletionHandler:^{
-        UISaveVideoAtPathToSavedPhotosAlbum(_fileUrl.absoluteString, self, nil, nil);
+        UISaveVideoAtPathToSavedPhotosAlbum(_fileUrl.absoluteString, nil, nil, nil);
         [self removeVideoWriter];
         [self setupVideoWriter];
         NSLog(@"Successfully closed video writer");
@@ -120,6 +120,20 @@ CFMutableArrayRef CreateDispatchHoldingArray();
 
 - (void) appendSampleBuffer:(CMSampleBufferRef)sampleBuffer {
     CFArrayAppendValue(_bufferArray, sampleBuffer);
+}
+
+static const void * ObjectRetainCallBack(CFAllocatorRef allocator, const void *value) {
+    
+    if (value) {
+        CFRetain(value);
+    }
+    return value;
+}
+
+static void ObjectReleaseCallBack(CFAllocatorRef allocator, const void *value) {
+    if (value) {
+        CFRelease(value);
+    }
 }
 
 CFMutableArrayRef CreateDispatchHoldingArray() {
@@ -174,7 +188,7 @@ CFMutableArrayRef CreateDispatchHoldingArray() {
             [_videoWriter addInput:_writerInput];
         
     }
-    
+    _bufferArray = CreateDispatchHoldingArray();
     
 }
 
@@ -253,10 +267,17 @@ CFMutableArrayRef CreateDispatchHoldingArray() {
             
             CMSampleBufferRef nextSampleBuffer = (CMSampleBufferRef)CFArrayGetValueAtIndex(_bufferArray, 0);
             if (nextSampleBuffer) {
-                [_writerInput appendSampleBuffer:nextSampleBuffer];
-                CFArrayRemoveValueAtIndex(_bufferArray, 0);
+                
+                BOOL appendSuccess = [_writerInput appendSampleBuffer:nextSampleBuffer];
+                
+                if (appendSuccess) {
+                    CFArrayRemoveValueAtIndex(_bufferArray, 0);
+                } else {
+                    NSLog(@"Writing Failed");
+                }
+                
             } else {
-                [_writerInput markAsFinished];
+                [self stopWriting];
                 break;
             }
         }

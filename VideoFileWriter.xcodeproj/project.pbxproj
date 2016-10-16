@@ -15,6 +15,7 @@
 		79B390B81DB37AE7009D7747 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 79B390B71DB37AE7009D7747 /* Assets.xcassets */; };
 		79B390BB1DB37AE7009D7747 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 79B390B91DB37AE7009D7747 /* LaunchScreen.storyboard */; };
 		79B390C41DB37B31009D7747 /* FJVideoFileWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B390C31DB37B31009D7747 /* FJVideoFileWriter.m */; };
+		79B390C81DB39FE3009D7747 /* FJVideoCapture.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B390C71DB39FE3009D7747 /* FJVideoCapture.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +32,8 @@
 		79B390BC1DB37AE7009D7747 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		79B390C21DB37B31009D7747 /* FJVideoFileWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FJVideoFileWriter.h; sourceTree = "<group>"; };
 		79B390C31DB37B31009D7747 /* FJVideoFileWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FJVideoFileWriter.m; sourceTree = "<group>"; };
+		79B390C61DB39FE3009D7747 /* FJVideoCapture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FJVideoCapture.h; sourceTree = "<group>"; };
+		79B390C71DB39FE3009D7747 /* FJVideoCapture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FJVideoCapture.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +67,8 @@
 			isa = PBXGroup;
 			children = (
 				79B390C51DB37B5F009D7747 /* Lib */,
+				79B390C61DB39FE3009D7747 /* FJVideoCapture.h */,
+				79B390C71DB39FE3009D7747 /* FJVideoCapture.m */,
 				79B390AB1DB37AE7009D7747 /* AppDelegate.h */,
 				79B390AC1DB37AE7009D7747 /* AppDelegate.m */,
 				79B390AE1DB37AE7009D7747 /* ViewController.h */,
@@ -167,6 +172,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				79B390C81DB39FE3009D7747 /* FJVideoCapture.m in Sources */,
 				79B390B61DB37AE7009D7747 /* VideoFileWriter.xcdatamodeld in Sources */,
 				79B390C41DB37B31009D7747 /* FJVideoFileWriter.m in Sources */,
 				79B390B01DB37AE7009D7747 /* ViewController.m in Sources */,
@@ -293,6 +299,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = D79F7E5CDG;
 				INFOPLIST_FILE = VideoFileWriter/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.my.VideoFileWriter;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -305,6 +312,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = D79F7E5CDG;
 				INFOPLIST_FILE = VideoFileWriter/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.my.VideoFileWriter;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -330,6 +338,7 @@
 				79B390C11DB37AE7009D7747 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
