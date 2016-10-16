@@ -25,7 +25,7 @@
     _isRecording = NO;
     
     _videoCapture = [[FJVideoCapture alloc] initWithDisplayView:_displayView andDelegate:self];
-    _fileWriter = [[FJVideoFileWriter alloc] initWithFileUrl:NULL BufferType:FJ_PIXELBUFFER andVideoSize:CGSizeMake(720, 1280)];
+    _fileWriter = [[FJVideoFileWriter alloc] initWithFileUrl:NULL BufferType:FJ_PIXELBUFFER VideoSize: CGSizeMake(720, 1280) andVideoSource:FJ_DATA];
     // Do any additional setup after loading the view, typically from a nib.
 }
 

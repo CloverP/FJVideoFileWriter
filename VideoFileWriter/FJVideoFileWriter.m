@@ -28,7 +28,7 @@
 
 //writer
 @property (assign, nonatomic) FJ_BUFFERTYPE bufferType;
-
+@property (assign, nonatomic) FJ_VIDEOSOURCE videoSource;
 
 
 CFMutableArrayRef CreateDispatchHoldingArray();
@@ -55,7 +55,8 @@ CFMutableArrayRef CreateDispatchHoldingArray();
 
 - (instancetype) initWithFileUrl:(NSURL *)fileUrl
                       BufferType:(FJ_BUFFERTYPE) bufferType
-                    andVideoSize:(CGSize) videoSize {
+                       VideoSize:(CGSize) videoSize
+                  andVideoSource:(FJ_VIDEOSOURCE) videoSource {
     if (self  = [super init]) {
         if (!fileUrl) {
             NSString *fileName = [NSString stringWithFormat:@"%ld.m4v",(long)[[NSDate date] timeIntervalSince1970]];
@@ -83,6 +84,7 @@ CFMutableArrayRef CreateDispatchHoldingArray();
         _isAdding = NO;
         _frameCount = 0;
         _videoFPS = 30;
+        _videoSource = videoSource;
         [self setupVideoWriter];
     }
     return  self;
@@ -168,12 +170,29 @@ CFMutableArrayRef CreateDispatchHoldingArray() {
         
         NSParameterAssert(_videoWriter);
         
-        NSDictionary *videoSettings = [NSDictionary dictionaryWithObjectsAndKeys:AVVideoCodecH264, AVVideoCodecKey,
-                                       [NSNumber numberWithInt:_videoSize.width], AVVideoWidthKey,
-                                       [NSNumber numberWithInt:_videoSize.height], AVVideoHeightKey, nil];
-        _writerInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeVideo outputSettings:videoSettings];
-        _writerInput.transform = CGAffineTransformMakeRotation(M_PI/2);
-        
+        switch (_videoSource) {
+            case FJ_FILE: {
+                NSDictionary *videoSettings = [NSDictionary dictionaryWithObjectsAndKeys:AVVideoCodecH264, AVVideoCodecKey,
+                                               [NSNumber numberWithInt:_videoSize.width], AVVideoWidthKey,
+                                               [NSNumber numberWithInt:_videoSize.height], AVVideoHeightKey, nil];
+                _writerInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeVideo outputSettings:videoSettings];
+                _writerInput.transform = CGAffineTransformMakeRotation(M_PI/2);
+            }
+
+                break;
+            case FJ_DATA: {
+                NSDictionary *videoSettings = [NSDictionary dictionaryWithObjectsAndKeys:AVVideoCodecH264, AVVideoCodecKey,
+                                               [NSNumber numberWithInt:_videoSize.width], AVVideoWidthKey,
+                                               [NSNumber numberWithInt:_videoSize.height], AVVideoHeightKey, nil];
+                _writerInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeVideo outputSettings:videoSettings];
+                _writerInput.transform = CGAffineTransformMakeRotation(M_PI*2);
+            }
+
+                break;
+            default:
+                break;
+        }
+
         _writerInput.expectsMediaDataInRealTime = YES;
         
         NSDictionary *sourcePixelBufferAttributesDictionary = [NSDictionary dictionaryWithObjectsAndKeys:

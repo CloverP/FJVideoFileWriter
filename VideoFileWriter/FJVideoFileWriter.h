@@ -16,14 +16,18 @@ typedef enum {
     FJ_MUXBUFFER //buffer and audio
 }FJ_BUFFERTYPE;
 
-
+typedef enum {
+    FJ_FILE = 4,
+    FJ_DATA,
+}FJ_VIDEOSOURCE;
 
 
 @interface FJVideoFileWriter : NSObject
 
 - (instancetype) initWithFileUrl:(NSURL *)fileUrl
                       BufferType:(FJ_BUFFERTYPE) bufferType
-                    andVideoSize:(CGSize) videoSize;
+                       VideoSize:(CGSize) videoSize
+                  andVideoSource:(FJ_VIDEOSOURCE) videoSource;
 
 - (void) appendPixelBuffer:(CVPixelBufferRef) pixelBuffer;
 - (void) appendSampleBuffer:(CMSampleBufferRef) sampleBuffer;

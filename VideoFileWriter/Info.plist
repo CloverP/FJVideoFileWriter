@@ -2,12 +2,14 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>VideoFileWriter 需要您的同意才能读取媒体资料库</string>
-    <key>NSCameraUsageDescription</key>
-    <string>VideoFileWriter 需要您的同意才能使用摄像头</string>
-    <key>NSMicrophoneUsageDescription</key>
-    <string>VideoFileWriter 需要您的同意才能使用麦克风</string>
+	<key>UIFileSharingEnabled</key>
+	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>VideoFileWriter 需要您的同意才能读取媒体资料库</string>
+	<key>NSCameraUsageDescription</key>
+	<string>VideoFileWriter 需要您的同意才能使用摄像头</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>VideoFileWriter 需要您的同意才能使用麦克风</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
