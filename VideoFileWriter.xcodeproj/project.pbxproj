@@ -1,0 +1,350 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		79B390AA1DB37AE7009D7747 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B390A91DB37AE7009D7747 /* main.m */; };
+		79B390AD1DB37AE7009D7747 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B390AC1DB37AE7009D7747 /* AppDelegate.m */; };
+		79B390B01DB37AE7009D7747 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B390AF1DB37AE7009D7747 /* ViewController.m */; };
+		79B390B31DB37AE7009D7747 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 79B390B11DB37AE7009D7747 /* Main.storyboard */; };
+		79B390B61DB37AE7009D7747 /* VideoFileWriter.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 79B390B41DB37AE7009D7747 /* VideoFileWriter.xcdatamodeld */; };
+		79B390B81DB37AE7009D7747 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 79B390B71DB37AE7009D7747 /* Assets.xcassets */; };
+		79B390BB1DB37AE7009D7747 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 79B390B91DB37AE7009D7747 /* LaunchScreen.storyboard */; };
+		79B390C41DB37B31009D7747 /* FJVideoFileWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B390C31DB37B31009D7747 /* FJVideoFileWriter.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		79B390A51DB37AE7009D7747 /* VideoFileWriter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VideoFileWriter.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		79B390A91DB37AE7009D7747 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		79B390AB1DB37AE7009D7747 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		79B390AC1DB37AE7009D7747 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		79B390AE1DB37AE7009D7747 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		79B390AF1DB37AE7009D7747 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		79B390B21DB37AE7009D7747 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		79B390B51DB37AE7009D7747 /* VideoFileWriter.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = VideoFileWriter.xcdatamodel; sourceTree = "<group>"; };
+		79B390B71DB37AE7009D7747 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		79B390BA1DB37AE7009D7747 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		79B390BC1DB37AE7009D7747 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		79B390C21DB37B31009D7747 /* FJVideoFileWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FJVideoFileWriter.h; sourceTree = "<group>"; };
+		79B390C31DB37B31009D7747 /* FJVideoFileWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FJVideoFileWriter.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		79B390A21DB37AE7009D7747 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		79B3909C1DB37AE7009D7747 = {
+			isa = PBXGroup;
+			children = (
+				79B390A71DB37AE7009D7747 /* VideoFileWriter */,
+				79B390A61DB37AE7009D7747 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		79B390A61DB37AE7009D7747 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				79B390A51DB37AE7009D7747 /* VideoFileWriter.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		79B390A71DB37AE7009D7747 /* VideoFileWriter */ = {
+			isa = PBXGroup;
+			children = (
+				79B390C51DB37B5F009D7747 /* Lib */,
+				79B390AB1DB37AE7009D7747 /* AppDelegate.h */,
+				79B390AC1DB37AE7009D7747 /* AppDelegate.m */,
+				79B390AE1DB37AE7009D7747 /* ViewController.h */,
+				79B390AF1DB37AE7009D7747 /* ViewController.m */,
+				79B390B11DB37AE7009D7747 /* Main.storyboard */,
+				79B390B71DB37AE7009D7747 /* Assets.xcassets */,
+				79B390B91DB37AE7009D7747 /* LaunchScreen.storyboard */,
+				79B390BC1DB37AE7009D7747 /* Info.plist */,
+				79B390B41DB37AE7009D7747 /* VideoFileWriter.xcdatamodeld */,
+				79B390A81DB37AE7009D7747 /* Supporting Files */,
+			);
+			path = VideoFileWriter;
+			sourceTree = "<group>";
+		};
+		79B390A81DB37AE7009D7747 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				79B390A91DB37AE7009D7747 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		79B390C51DB37B5F009D7747 /* Lib */ = {
+			isa = PBXGroup;
+			children = (
+				79B390C21DB37B31009D7747 /* FJVideoFileWriter.h */,
+				79B390C31DB37B31009D7747 /* FJVideoFileWriter.m */,
+			);
+			name = Lib;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		79B390A41DB37AE7009D7747 /* VideoFileWriter */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 79B390BF1DB37AE7009D7747 /* Build configuration list for PBXNativeTarget "VideoFileWriter" */;
+			buildPhases = (
+				79B390A11DB37AE7009D7747 /* Sources */,
+				79B390A21DB37AE7009D7747 /* Frameworks */,
+				79B390A31DB37AE7009D7747 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = VideoFileWriter;
+			productName = VideoFileWriter;
+			productReference = 79B390A51DB37AE7009D7747 /* VideoFileWriter.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		79B3909D1DB37AE7009D7747 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0800;
+				ORGANIZATIONNAME = mylib;
+				TargetAttributes = {
+					79B390A41DB37AE7009D7747 = {
+						CreatedOnToolsVersion = 8.0;
+						DevelopmentTeam = D79F7E5CDG;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 79B390A01DB37AE7009D7747 /* Build configuration list for PBXProject "VideoFileWriter" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 79B3909C1DB37AE7009D7747;
+			productRefGroup = 79B390A61DB37AE7009D7747 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				79B390A41DB37AE7009D7747 /* VideoFileWriter */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		79B390A31DB37AE7009D7747 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				79B390BB1DB37AE7009D7747 /* LaunchScreen.storyboard in Resources */,
+				79B390B81DB37AE7009D7747 /* Assets.xcassets in Resources */,
+				79B390B31DB37AE7009D7747 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		79B390A11DB37AE7009D7747 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				79B390B61DB37AE7009D7747 /* VideoFileWriter.xcdatamodeld in Sources */,
+				79B390C41DB37B31009D7747 /* FJVideoFileWriter.m in Sources */,
+				79B390B01DB37AE7009D7747 /* ViewController.m in Sources */,
+				79B390AD1DB37AE7009D7747 /* AppDelegate.m in Sources */,
+				79B390AA1DB37AE7009D7747 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		79B390B11DB37AE7009D7747 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				79B390B21DB37AE7009D7747 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		79B390B91DB37AE7009D7747 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				79B390BA1DB37AE7009D7747 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		79B390BD1DB37AE7009D7747 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		79B390BE1DB37AE7009D7747 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		79B390C01DB37AE7009D7747 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = D79F7E5CDG;
+				INFOPLIST_FILE = VideoFileWriter/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.my.VideoFileWriter;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		79B390C11DB37AE7009D7747 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = D79F7E5CDG;
+				INFOPLIST_FILE = VideoFileWriter/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.my.VideoFileWriter;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		79B390A01DB37AE7009D7747 /* Build configuration list for PBXProject "VideoFileWriter" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				79B390BD1DB37AE7009D7747 /* Debug */,
+				79B390BE1DB37AE7009D7747 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		79B390BF1DB37AE7009D7747 /* Build configuration list for PBXNativeTarget "VideoFileWriter" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				79B390C01DB37AE7009D7747 /* Debug */,
+				79B390C11DB37AE7009D7747 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		79B390B41DB37AE7009D7747 /* VideoFileWriter.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				79B390B51DB37AE7009D7747 /* VideoFileWriter.xcdatamodel */,
+			);
+			currentVersion = 79B390B51DB37AE7009D7747 /* VideoFileWriter.xcdatamodel */;
+			path = VideoFileWriter.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 79B3909D1DB37AE7009D7747 /* Project object */;
+}
