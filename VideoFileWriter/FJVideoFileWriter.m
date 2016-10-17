@@ -19,13 +19,14 @@
 @property (assign, nonatomic) CGSize videoSize;
 @property (assign, nonatomic) BOOL isAdding;
 @property (assign, nonatomic) long frameCount;
+@property (assign, nonatomic) long audioCount;
 @property (assign, nonatomic) int  videoFPS;
 
 
 @property (strong, nonatomic) AVAssetWriter *videoWriter;
-@property (strong, nonatomic) AVAssetWriterInput *writerInput;
+@property (strong, nonatomic) AVAssetWriterInput *videoWriterInput;
+@property (strong, nonatomic) AVAssetWriterInput *audioWriterInput;
 @property (strong, nonatomic) AVAssetWriterInputPixelBufferAdaptor *adaptor;
-
 //writer
 @property (assign, nonatomic) FJ_BUFFERTYPE bufferType;
 @property (assign, nonatomic) FJ_VIDEOSOURCE videoSource;
@@ -43,13 +44,13 @@ CFMutableArrayRef CreateDispatchHoldingArray();
                  atTime:(CMTime)presentTime
               withInput:(AVAssetWriterInput*)writerInput;
 
+- (CMSampleBufferRef ) setupTimeStampForSampleBuffer:(CVPixelBufferRef) pixelBuffer
+                                      andDescription:(CMVideoFormatDescriptionRef) description;
+
 - (void) writePixelBuffer;
-- (void) writeSampleBUffer;
-- (void) writeMuxBUffer;
-
+- (void) writeSampleBuffer;
+- (void) writeMuxBuffer;
 - (void) writeToFile;
-
-- (CVPixelBufferRef)deepCopyPixelBuffer:(CVPixelBufferRef) pxbuffer;
 
 @end
 
@@ -85,6 +86,7 @@ CFMutableArrayRef CreateDispatchHoldingArray();
         
         _isAdding = NO;
         _frameCount = 0;
+        _audioCount = 0;
         _videoFPS = 30;
         _videoSource = videoSource;
         [self setupVideoWriter];
@@ -108,7 +110,7 @@ CFMutableArrayRef CreateDispatchHoldingArray();
 }
 
 - (void) stopWriting {
-    [_writerInput markAsFinished];
+    [_videoWriterInput markAsFinished];
     [_videoWriter finishWritingWithCompletionHandler:^{
         //deal the file with your own way.
         UISaveVideoAtPathToSavedPhotosAlbum(_fileUrl.relativePath, self, @selector(video:didFinishSavingWithError:contextInfo:), nil);
@@ -120,6 +122,7 @@ CFMutableArrayRef CreateDispatchHoldingArray();
     CVPixelBufferPoolRelease(_adaptor.pixelBufferPool);
     
     _frameCount = 0;
+    _audioCount = 0;
     _isAdding = NO;
     NSLog (@"Done");
 }
@@ -174,26 +177,59 @@ CFMutableArrayRef CreateDispatchHoldingArray();
     CFArrayAppendValue(_bufferArray, pixelBuffer);
 }
 
+- (CMSampleBufferRef ) setupTimeStampForSampleBuffer:(CVPixelBufferRef) pixelBuffer
+                                      andDescription:(CMVideoFormatDescriptionRef) description {
+    CMSampleBufferRef newbuffer = NULL;
+    
+    
+    
+    
+    CMSampleTimingInfo info;
+    info.decodeTimeStamp = CMTimeMake(_frameCount, _videoFPS);
+    info.duration = kCMTimeInvalid;
+    info.presentationTimeStamp = CMTimeMake(_frameCount, _videoFPS);
+    
+    OSStatus status = CMSampleBufferCreateReadyWithImageBuffer(kCFAllocatorDefault, pixelBuffer, description, &info, &newbuffer);
+    
+    if (status == noErr) {
+         _frameCount++;
+        return newbuffer;
+    }
+    
+    return NULL;
+}
+
 - (void) appendSampleBuffer:(CMSampleBufferRef)sampleBuffer {
     
     if (_videoSource == FJ_DATA) {
-        CMSampleBufferRef newbuffer = NULL;
-        
         CVPixelBufferRef pixbuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
-        
         CMVideoFormatDescriptionRef videoDes = CMSampleBufferGetFormatDescription(sampleBuffer);
-        CMSampleTimingInfo info;
-        info.decodeTimeStamp = CMTimeMake(_frameCount, _videoFPS);
-        info.duration = kCMTimeInvalid;
-        info.presentationTimeStamp = CMTimeMake(_frameCount, _videoFPS);
+        if (pixbuffer) {
+            CMSampleBufferRef newBuffer = [self setupTimeStampForSampleBuffer:pixbuffer andDescription:videoDes];
+            if (newBuffer) {
+                CFArrayAppendValue(_bufferArray, newBuffer);
+                CFRelease(newBuffer);
+            }
+        } else {
+            CMSampleBufferRef newbuffer = NULL;
+            CMSampleTimingInfo info;
+            info.decodeTimeStamp = CMTimeMake(_audioCount, _videoFPS);
+            info.duration = kCMTimeInvalid;
+            info.presentationTimeStamp = CMTimeMake(_audioCount, _videoFPS);
         
-        OSStatus status = CMSampleBufferCreateReadyWithImageBuffer(kCFAllocatorDefault, pixbuffer, videoDes, &info, &newbuffer);
-        
-        if (status == noErr) {
-            _frameCount++;
-            CFArrayAppendValue(_bufferArray, newbuffer);
-            CFRelease(newbuffer);
+            OSStatus status = CMSampleBufferCreateCopyWithNewTiming(kCFAllocatorDefault, sampleBuffer, 1, &info, &newbuffer);
+            
+            if (status == noErr) {
+                NSLog(@"hehe");
+                _audioCount++;
+                CFArrayAppendValue(_bufferArray, newbuffer);
+                CFRelease(newbuffer);
+            }
+    
         }
+        
+        
+        
     } else {
         CFArrayAppendValue(_bufferArray, sampleBuffer);
     }
@@ -236,7 +272,7 @@ CFMutableArrayRef CreateDispatchHoldingArray() {
 - (void) setupVideoWriter {
     
     if (!_writingQueue) {
-        _writingQueue = dispatch_queue_create("fj_videowriting_queue", DISPATCH_QUEUE_SERIAL);
+        _writingQueue = dispatch_queue_create("fj_video_writing_queue", DISPATCH_QUEUE_SERIAL);
     }
     
     if (!_videoWriter) {
@@ -245,7 +281,6 @@ CFMutableArrayRef CreateDispatchHoldingArray() {
         _videoWriter = [[AVAssetWriter alloc] initWithURL:_fileUrl
                                                  fileType:AVFileTypeQuickTimeMovie
                                                     error:&error];
-        
         NSParameterAssert(_videoWriter);
         
         switch (_videoSource) {
@@ -253,16 +288,32 @@ CFMutableArrayRef CreateDispatchHoldingArray() {
                 NSDictionary *videoSettings = [NSDictionary dictionaryWithObjectsAndKeys:AVVideoCodecH264, AVVideoCodecKey,
                                                [NSNumber numberWithInt:_videoSize.width*2], AVVideoWidthKey,
                                                [NSNumber numberWithInt:_videoSize.height*2], AVVideoHeightKey, nil];
-                _writerInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeVideo outputSettings:videoSettings];
+                _videoWriterInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeVideo outputSettings:videoSettings];
 //                _writerInput.transform = CGAffineTransformMakeRotation(M_PI/2);
             }
 
                 break;
             case FJ_DATA: {
+                //video
                 NSDictionary *videoSettings = [NSDictionary dictionaryWithObjectsAndKeys:AVVideoCodecH264, AVVideoCodecKey,
                                                [NSNumber numberWithInt:_videoSize.width*2], AVVideoWidthKey,
                                                [NSNumber numberWithInt:_videoSize.height*2], AVVideoHeightKey, nil];
-                _writerInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeVideo outputSettings:videoSettings];
+                
+                _videoWriterInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeVideo outputSettings:videoSettings];
+
+                //video
+                AudioChannelLayout acl;
+                bzero( &acl, sizeof(acl));
+                acl.mChannelLayoutTag = kAudioChannelLayoutTag_Mono;
+                
+                NSDictionary *audioSetting = [NSDictionary dictionaryWithObjectsAndKeys:
+                                              [NSNumber numberWithInt: kAudioFormatMPEG4AAC ], AVFormatIDKey,
+                                              [NSNumber numberWithInt:64000], AVEncoderBitRateKey,
+                                              [NSNumber numberWithFloat: 44100.0 ], AVSampleRateKey,
+                                              [NSNumber numberWithInt: 1 ], AVNumberOfChannelsKey,
+                                              [NSData dataWithBytes: &acl length: sizeof( acl ) ], AVChannelLayoutKey, nil];
+                
+                _audioWriterInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeAudio outputSettings:audioSetting];
             }
 
                 break;
@@ -270,18 +321,21 @@ CFMutableArrayRef CreateDispatchHoldingArray() {
                 break;
         }
 
-        _writerInput.expectsMediaDataInRealTime = YES;
+        _videoWriterInput.expectsMediaDataInRealTime = YES;
         
         NSDictionary *sourcePixelBufferAttributesDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
                                                                [NSNumber numberWithInt:kCVPixelFormatType_64ARGB], kCVPixelBufferPixelFormatTypeKey, nil];
         
-        _adaptor = [AVAssetWriterInputPixelBufferAdaptor assetWriterInputPixelBufferAdaptorWithAssetWriterInput:_writerInput
+        _adaptor = [AVAssetWriterInputPixelBufferAdaptor assetWriterInputPixelBufferAdaptorWithAssetWriterInput:_videoWriterInput
                                                                                     sourcePixelBufferAttributes:sourcePixelBufferAttributesDictionary];
-        NSParameterAssert(_writerInput);
-        NSParameterAssert([_videoWriter canAddInput:_writerInput]);
+        NSParameterAssert(_videoWriterInput);
+        NSParameterAssert([_videoWriter canAddInput:_videoWriterInput]);
         
-        if ([_videoWriter canAddInput:_writerInput])
-            [_videoWriter addInput:_writerInput];
+        if ([_videoWriter canAddInput:_videoWriterInput])
+            [_videoWriter addInput:_videoWriterInput];
+        
+        if ([_videoWriter canAddInput:_audioWriterInput])
+            [_videoWriter addInput:_audioWriterInput];
         
     }
     _bufferArray = CreateDispatchHoldingArray();
@@ -293,7 +347,7 @@ CFMutableArrayRef CreateDispatchHoldingArray() {
     _bufferArray = NULL;
     
     _videoWriter = nil;
-    _writerInput = nil;
+    _videoWriterInput = nil;
     _adaptor = nil;
     _writingQueue = NULL;
 }
@@ -308,9 +362,9 @@ CFMutableArrayRef CreateDispatchHoldingArray() {
 
 
 - (void) writePixelBuffer {
-    [_writerInput requestMediaDataWhenReadyOnQueue:_writingQueue usingBlock:^{
+    [_videoWriterInput requestMediaDataWhenReadyOnQueue:_writingQueue usingBlock:^{
         
-        while ([_writerInput isReadyForMoreMediaData])
+        while ([_videoWriterInput isReadyForMoreMediaData])
         {
             if (CFArrayGetCount(_bufferArray) == 0) {
                 if (_isAdding) {
@@ -329,7 +383,7 @@ CFMutableArrayRef CreateDispatchHoldingArray() {
                 BOOL appendSuccess = [self appendToAdapter:_adaptor
                                                pixelBuffer:buffer
                                                     atTime:PTS
-                                                 withInput:_writerInput];
+                                                 withInput:_videoWriterInput];
                 if (appendSuccess) {
                     _frameCount++;
                     CFArrayRemoveValueAtIndex(_bufferArray, 0);
@@ -345,10 +399,10 @@ CFMutableArrayRef CreateDispatchHoldingArray() {
     }];
 }
 
-- (void)writeSampleBUffer {
-    [_writerInput requestMediaDataWhenReadyOnQueue:_writingQueue usingBlock:^{
+- (void)writeSampleBuffer {
+    [_videoWriterInput requestMediaDataWhenReadyOnQueue:_writingQueue usingBlock:^{
         
-        while ([_writerInput isReadyForMoreMediaData])
+        while ([_videoWriterInput isReadyForMoreMediaData])
         {
             if (CFArrayGetCount(_bufferArray) == 0) {
                 if (_isAdding) {
@@ -364,7 +418,7 @@ CFMutableArrayRef CreateDispatchHoldingArray() {
             CMSampleBufferRef nextSampleBuffer = (CMSampleBufferRef)CFArrayGetValueAtIndex(_bufferArray, 0);
             if (nextSampleBuffer) {
                 
-                BOOL appendSuccess = [_writerInput appendSampleBuffer:nextSampleBuffer];
+                BOOL appendSuccess = [_videoWriterInput appendSampleBuffer:nextSampleBuffer];
                 
                 if (appendSuccess) {
                     CFArrayRemoveValueAtIndex(_bufferArray, 0);
@@ -380,8 +434,49 @@ CFMutableArrayRef CreateDispatchHoldingArray() {
     }];
 }
 
-- (void) writeMuxBUffer {
-    //todo
+- (void) writeMuxBuffer {
+    [_videoWriterInput requestMediaDataWhenReadyOnQueue:_writingQueue usingBlock:^{
+        
+        while ([_videoWriterInput isReadyForMoreMediaData])
+        {
+            if (CFArrayGetCount(_bufferArray) == 0) {
+                if (_isAdding) {
+                    continue;
+                }
+                else {
+                    [self stopWriting];
+                    break;
+                }
+                
+            }
+            
+            CMSampleBufferRef nextSampleBuffer = (CMSampleBufferRef)CFArrayGetValueAtIndex(_bufferArray, 0);
+            if (nextSampleBuffer) {
+                
+                CVPixelBufferRef pxBuffer = CMSampleBufferGetImageBuffer(nextSampleBuffer);
+                
+                BOOL appendSuccess;
+                
+                if (pxBuffer) {
+                    appendSuccess = [_videoWriterInput appendSampleBuffer:nextSampleBuffer];
+                } else {
+                    NSLog(@"hehe");
+                    appendSuccess = [_audioWriterInput appendSampleBuffer:nextSampleBuffer];
+                }
+                
+                if (appendSuccess) {
+                    
+                    CFArrayRemoveValueAtIndex(_bufferArray, 0);
+                } else {
+                    NSLog(@"writeMuxBuffer Failed");
+                }
+                
+            } else {
+                [self stopWriting];
+                break;
+            }
+        }
+    }];
 }
 
 - (void) writeToFile {
@@ -389,9 +484,9 @@ CFMutableArrayRef CreateDispatchHoldingArray() {
     if (_bufferType == FJ_PIXELBUFFER) {
         [self writePixelBuffer];
     } else  if (_bufferType == FJ_SAMPLEBUFFER) {
-        [self writeSampleBUffer];
+        [self writeSampleBuffer];
     } else {
-        [self writeMuxBUffer];
+        [self writeMuxBuffer];
     }
     
 }

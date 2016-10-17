@@ -32,7 +32,7 @@
     _isRecording = NO;
     
     _videoCapture = [[FJVideoCapture alloc] initWithDisplayView:_displayView andDelegate:self];
-    _fileWriter = [[FJVideoFileWriter alloc] initWithFileUrl:NULL BufferType:FJ_SAMPLEBUFFER VideoSize: CGSizeMake(720, 1280) andVideoSource:FJ_FILE];
+    _fileWriter = [[FJVideoFileWriter alloc] initWithFileUrl:NULL BufferType:FJ_MUXBUFFER VideoSize: CGSizeMake(720, 1280) andVideoSource:FJ_DATA];
     // Do any additional setup after loading the view, typically from a nib.
 }
 
@@ -55,12 +55,14 @@
         BOOL isvideo = [_videoCapture connectionIsVideo:connection];
         
         if (isvideo) {
-//            [_fileWriter appendSampleBuffer:sampleBuffer];
+//            CVPixelBufferRef pxbuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
+            [_fileWriter appendSampleBuffer:sampleBuffer];
         } else {
-            NSLog(@"audio");
+//            NSLog(@"audio");
+            [_fileWriter appendSampleBuffer:sampleBuffer];
         }
         
-//        CVPixelBufferRef pxbuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
+
         
         
     }
