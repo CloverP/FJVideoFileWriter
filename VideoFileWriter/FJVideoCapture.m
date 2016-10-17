@@ -86,6 +86,12 @@
     _previewLayer = [AVCaptureVideoPreviewLayer layerWithSession:_captureSession];
     [_disView.layer addSublayer:_previewLayer];
     
+    for (AVCaptureConnection *connection in _videoDataOutput.connections) {
+        if ([connection isVideoOrientationSupported]) {
+            [connection setVideoOrientation:AVCaptureVideoOrientationPortrait];
+        }
+    }
+    
     [self startSession];
 }
 

@@ -99,10 +99,16 @@ CFMutableArrayRef CreateDispatchHoldingArray();
     [self writeToFile];
 }
 
+- (void)video:(NSString *)videoPath didFinishSavingWithError:(NSError *)error
+  contextInfo:(void *)contextInfo {
+    
+}
+
 - (void) stopWriting {
     [_writerInput markAsFinished];
     [_videoWriter finishWritingWithCompletionHandler:^{
-        UISaveVideoAtPathToSavedPhotosAlbum(_fileUrl.absoluteString, nil, nil, nil);
+        //deal the file with your own way.
+        UISaveVideoAtPathToSavedPhotosAlbum(_fileUrl.relativePath, self, @selector(video:didFinishSavingWithError:contextInfo:), nil);
         [self removeVideoWriter];
         [self setupVideoWriter];
         NSLog(@"Successfully closed video writer");
@@ -181,14 +187,10 @@ CFMutableArrayRef CreateDispatchHoldingArray() {
 
                 break;
             case FJ_DATA: {
-//                NSDictionary *videoSettings = [NSDictionary dictionaryWithObjectsAndKeys:AVVideoCodecH264, AVVideoCodecKey,
-//                                               [NSNumber numberWithInt:_videoSize.width*2], AVVideoWidthKey,
-//                                               [NSNumber numberWithInt:_videoSize.height*2], AVVideoHeightKey, nil];
                 NSDictionary *videoSettings = [NSDictionary dictionaryWithObjectsAndKeys:AVVideoCodecH264, AVVideoCodecKey,
                                                [NSNumber numberWithInt:_videoSize.width*2], AVVideoWidthKey,
                                                [NSNumber numberWithInt:_videoSize.height*2], AVVideoHeightKey, nil];
                 _writerInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeVideo outputSettings:videoSettings];
-                _writerInput.transform = CGAffineTransformMakeRotation(M_PI/2);
             }
 
                 break;
