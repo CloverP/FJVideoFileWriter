@@ -100,6 +100,8 @@
     }
     
     [picker dismissViewControllerAnimated:YES completion:^{
+        
+        //Please don't try this way for now, memory leak.
         [_fileWriter startWriting];
         [_fileReader startReadingWithHandler:^(CMSampleBufferRef sampleBuffer) {
             if (sampleBuffer) {

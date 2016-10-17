@@ -1,7 +1,7 @@
 //
 //  FJVideoFileReader.m
 //  VideoFileWriter
-//
+//  
 //  Created by Clover on 17/10/2016.
 //  Copyright © 2016 Clover Peng. All rights reserved.
 //
@@ -52,8 +52,10 @@
                     if (handler) {
                         handler(videoBuffer);
                     }
-//                    CMTime time = CMSampleBufferGetDecodeTimeStamp(videoBuffer);
-//                    [NSThread sleepForTimeInterval:CMTimeGetSeconds(time)];
+                    
+                    CMTime time = CMSampleBufferGetPresentationTimeStamp(videoBuffer);
+                    [NSThread sleepForTimeInterval:CMTimeGetSeconds(time)];
+
                     
                 } else {
                     _isReading = NO;
@@ -114,7 +116,7 @@
 - (void) removeVideoReader {
     _reader = nil;
     _videoTrack = nil;
-    _videoReaderQueue = nil;
+    _videoReaderQueue = NULL;
 }
 
 @end

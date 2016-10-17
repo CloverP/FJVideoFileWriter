@@ -254,7 +254,7 @@ CFMutableArrayRef CreateDispatchHoldingArray() {
                                                [NSNumber numberWithInt:_videoSize.width*2], AVVideoWidthKey,
                                                [NSNumber numberWithInt:_videoSize.height*2], AVVideoHeightKey, nil];
                 _writerInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeVideo outputSettings:videoSettings];
-                _writerInput.transform = CGAffineTransformMakeRotation(M_PI/2);
+//                _writerInput.transform = CGAffineTransformMakeRotation(M_PI/2);
             }
 
                 break;
