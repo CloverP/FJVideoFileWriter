@@ -35,4 +35,6 @@ typedef enum {
 - (void) startWriting;
 - (void) stopWriting;
 
+- (void) clearAllVideos;
+
 @end

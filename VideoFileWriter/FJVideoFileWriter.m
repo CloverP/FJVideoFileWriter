@@ -49,6 +49,8 @@ CFMutableArrayRef CreateDispatchHoldingArray();
 
 - (void) writeToFile;
 
+- (CVPixelBufferRef)deepCopyPixelBuffer:(CVPixelBufferRef) pxbuffer;
+
 @end
 
 @implementation FJVideoFileWriter
@@ -59,7 +61,7 @@ CFMutableArrayRef CreateDispatchHoldingArray();
                   andVideoSource:(FJ_VIDEOSOURCE) videoSource {
     if (self  = [super init]) {
         if (!fileUrl) {
-            NSString *fileName = [NSString stringWithFormat:@"%ld.m4v",(long)[[NSDate date] timeIntervalSince1970]];
+            NSString *fileName = [NSString stringWithFormat:@"%f.m4v",[[NSDate date] timeIntervalSince1970]];
             NSString *betaCompressionDirectory = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:fileName];
             _fileUrl = [NSURL fileURLWithPath:betaCompressionDirectory];
         } else if ([fileUrl.absoluteString isEqualToString:_fileUrl.absoluteString]) {
@@ -110,6 +112,8 @@ CFMutableArrayRef CreateDispatchHoldingArray();
         //deal the file with your own way.
         UISaveVideoAtPathToSavedPhotosAlbum(_fileUrl.relativePath, self, @selector(video:didFinishSavingWithError:contextInfo:), nil);
         [self removeVideoWriter];
+//        [self clearAllVideos];
+        [self setFilePath];
         [self setupVideoWriter];
         NSLog(@"Successfully closed video writer");
         
@@ -121,13 +125,79 @@ CFMutableArrayRef CreateDispatchHoldingArray();
     NSLog (@"Done");
 }
 
+- (void) clearAllVideos {
+    
+    NSString *extension = @"m4v";
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = paths.lastObject;
+    
+    NSArray *contents = [fileManager contentsOfDirectoryAtPath:documentsDirectory error:NULL];
+    NSEnumerator *e = [contents objectEnumerator];
+    NSString *filename;
+    while ((filename = [e nextObject])) {
+        
+        if ([[filename pathExtension] isEqualToString:extension]) {
+            
+            [fileManager removeItemAtPath:[documentsDirectory stringByAppendingPathComponent:filename] error:NULL];
+        }
+    }
+}
+
+//internal
+- (CVPixelBufferRef)deepCopyPixelBuffer:(CVPixelBufferRef) pxbuffer
+{
+    CVPixelBufferRef copy = NULL;
+    
+    CVPixelBufferCreate(nil,
+                        CVPixelBufferGetWidth(pxbuffer),
+                        CVPixelBufferGetHeight(pxbuffer),
+                        CVPixelBufferGetPixelFormatType(pxbuffer),
+                        CVBufferGetAttachments(pxbuffer, kCVAttachmentMode_ShouldPropagate),
+                        &copy);
+    
+    CVPixelBufferLockBaseAddress(pxbuffer, kCVPixelBufferLock_ReadOnly);
+    CVPixelBufferLockBaseAddress(copy, 0);
+    
+    for (int i = 0; i < CVPixelBufferGetPlaneCount(pxbuffer); i++) {
+        void *dest = CVPixelBufferGetBaseAddressOfPlane(copy, i);
+        void *source = CVPixelBufferGetBaseAddressOfPlane(pxbuffer, i);
+        size_t height =CVPixelBufferGetHeightOfPlane(pxbuffer, i);
+        size_t bytesPerRow = CVPixelBufferGetBytesPerRowOfPlane(pxbuffer, i);
+        memcpy(dest, source, height * bytesPerRow);
+    }
+    CVPixelBufferUnlockBaseAddress(copy, 0);
+    CVPixelBufferUnlockBaseAddress(pxbuffer, kCVPixelBufferLock_ReadOnly);
+    return copy;
+}
 
 - (void) appendPixelBuffer:(CVPixelBufferRef)pixelBuffer {
     CFArrayAppendValue(_bufferArray, pixelBuffer);
 }
 
 - (void) appendSampleBuffer:(CMSampleBufferRef)sampleBuffer {
-    CFArrayAppendValue(_bufferArray, sampleBuffer);
+    
+   
+    
+    CMSampleBufferRef newbuffer = NULL;
+    
+    CVPixelBufferRef pixbuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
+    
+    CMVideoFormatDescriptionRef videoDes = CMSampleBufferGetFormatDescription(sampleBuffer);
+    CMSampleTimingInfo info;
+    info.decodeTimeStamp = CMTimeMake(_frameCount, _videoFPS);
+    info.duration = kCMTimeInvalid;
+    info.presentationTimeStamp = CMTimeMake(_frameCount, _videoFPS);
+    
+    OSStatus status = CMSampleBufferCreateReadyWithImageBuffer(kCFAllocatorDefault, pixbuffer, videoDes, &info, &newbuffer);
+    
+    if (status == noErr) {
+        _frameCount++;
+        CFArrayAppendValue(_bufferArray, newbuffer);
+        CFRelease(newbuffer);
+        NSLog(@"count = %ld", CFArrayGetCount(_bufferArray));
+    }
+    
 }
 
 static const void * ObjectRetainCallBack(CFAllocatorRef allocator, const void *value) {
@@ -296,6 +366,7 @@ CFMutableArrayRef CreateDispatchHoldingArray() {
                 
                 if (appendSuccess) {
                     CFArrayRemoveValueAtIndex(_bufferArray, 0);
+                    NSLog(@"writeSampleBUffer count = %ld", CFArrayGetCount(_bufferArray));
                 } else {
                     NSLog(@"Writing Failed");
                 }

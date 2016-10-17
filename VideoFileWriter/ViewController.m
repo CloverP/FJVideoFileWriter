@@ -25,7 +25,7 @@
     _isRecording = NO;
     
     _videoCapture = [[FJVideoCapture alloc] initWithDisplayView:_displayView andDelegate:self];
-    _fileWriter = [[FJVideoFileWriter alloc] initWithFileUrl:NULL BufferType:FJ_PIXELBUFFER VideoSize: CGSizeMake(720, 1280) andVideoSource:FJ_DATA];
+    _fileWriter = [[FJVideoFileWriter alloc] initWithFileUrl:NULL BufferType:FJ_SAMPLEBUFFER VideoSize: CGSizeMake(720, 1280) andVideoSource:FJ_DATA];
     // Do any additional setup after loading the view, typically from a nib.
 }
 
@@ -42,9 +42,11 @@
 #pragma mark -- AVCaptureVideoDataOutputSampleBufferDelegate
 - (void) captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection
 {
+
+    
     if (_isRecording) {
-        CVPixelBufferRef pxbuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
-        [_fileWriter appendPixelBuffer:pxbuffer];
+//        CVPixelBufferRef pxbuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
+        [_fileWriter appendSampleBuffer:sampleBuffer];
         
     }
     
@@ -52,12 +54,14 @@
 
 
 - (IBAction)choosePixel:(id)sender {
+    NSLog(@"choosePixel");
     _isRecording = !_isRecording;
     
     _isRecording? [_fileWriter startWriting]:[_fileWriter stopWriting];
 }
 
 - (IBAction)chooseSamBuffer:(id)sender {
+     NSLog(@"chooseSamBuffer");
     _isRecording = !_isRecording;
     
     _isRecording? [_fileWriter startWriting]:[_fileWriter stopWriting];
