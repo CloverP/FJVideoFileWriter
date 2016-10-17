@@ -17,4 +17,6 @@
 
 - (void) setDisplayViewBounds:(CGRect) bounds;
 
+- (BOOL) connectionIsVideo:(AVCaptureConnection *)connection;
+
 @end

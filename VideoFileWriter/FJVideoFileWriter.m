@@ -334,7 +334,7 @@ CFMutableArrayRef CreateDispatchHoldingArray() {
                     _frameCount++;
                     CFArrayRemoveValueAtIndex(_bufferArray, 0);
                 } else {
-                    NSLog(@"Writing Failed");
+                    NSLog(@"writePixelBuffer Failed");
                 }
             } else {
                 [self stopWriting];
@@ -368,9 +368,8 @@ CFMutableArrayRef CreateDispatchHoldingArray() {
                 
                 if (appendSuccess) {
                     CFArrayRemoveValueAtIndex(_bufferArray, 0);
-                    NSLog(@"writeSampleBUffer count = %ld", CFArrayGetCount(_bufferArray));
                 } else {
-                    NSLog(@"Writing Failed");
+                    NSLog(@"writeSampleBUffer Failed");
                 }
                 
             } else {

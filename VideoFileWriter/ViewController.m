@@ -49,11 +49,19 @@
 #pragma mark -- AVCaptureVideoDataOutputSampleBufferDelegate
 - (void) captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection
 {
-
     
     if (_isRecording) {
+        
+        BOOL isvideo = [_videoCapture connectionIsVideo:connection];
+        
+        if (isvideo) {
+//            [_fileWriter appendSampleBuffer:sampleBuffer];
+        } else {
+            NSLog(@"audio");
+        }
+        
 //        CVPixelBufferRef pxbuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
-        [_fileWriter appendSampleBuffer:sampleBuffer];
+        
         
     }
     
@@ -98,15 +106,13 @@
         _fileReader = [[FJVideoFileReader alloc] initWithSize:CGSizeMake(720, 1280) andFileUrl:_localVideoUrl];
         
     }
-    
+//Please don't try this way for now, memory leak.
     [picker dismissViewControllerAnimated:YES completion:^{
-        
-        //Please don't try this way for now, memory leak.
         [_fileWriter startWriting];
         [_fileReader startReadingWithHandler:^(CMSampleBufferRef sampleBuffer) {
             if (sampleBuffer) {
                 [_fileWriter appendSampleBuffer:sampleBuffer];
-                CFRelease(sampleBuffer);
+//                CFRelease(sampleBuffer);
             } else {
                 [_fileWriter stopWriting];
             }
