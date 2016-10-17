@@ -44,8 +44,10 @@ CFMutableArrayRef CreateDispatchHoldingArray();
                  atTime:(CMTime)presentTime
               withInput:(AVAssetWriterInput*)writerInput;
 
-- (CMSampleBufferRef ) setupTimeStampForSampleBuffer:(CVPixelBufferRef) pixelBuffer
+- (CMSampleBufferRef ) setupTimeStampForVideoSampleBuffer:(CVPixelBufferRef) pixelBuffer
                                       andDescription:(CMVideoFormatDescriptionRef) description;
+
+- (CMSampleBufferRef) setupTimeStampForAudioSampleBuffer:(CMSampleBufferRef) sampleBuffer;
 
 - (void) writePixelBuffer;
 - (void) writeSampleBuffer;
@@ -177,7 +179,7 @@ CFMutableArrayRef CreateDispatchHoldingArray();
     CFArrayAppendValue(_bufferArray, pixelBuffer);
 }
 
-- (CMSampleBufferRef ) setupTimeStampForSampleBuffer:(CVPixelBufferRef) pixelBuffer
+- (CMSampleBufferRef ) setupTimeStampForVideoSampleBuffer:(CVPixelBufferRef) pixelBuffer
                                       andDescription:(CMVideoFormatDescriptionRef) description {
     CMSampleBufferRef newbuffer = NULL;
     
@@ -199,28 +201,40 @@ CFMutableArrayRef CreateDispatchHoldingArray();
     return NULL;
 }
 
+- (CMSampleBufferRef) setupTimeStampForAudioSampleBuffer:(CMSampleBufferRef) sampleBuffer {
+    
+    CMSampleBufferRef newbuffer = NULL;
+    CMSampleTimingInfo info;
+    info.decodeTimeStamp = CMTimeMake(_audioCount, _videoFPS);
+    info.duration = kCMTimeInvalid;
+    info.presentationTimeStamp = CMTimeMake(_audioCount, _videoFPS);
+    
+    OSStatus status = CMSampleBufferCreateCopyWithNewTiming(kCFAllocatorDefault, sampleBuffer, 1, &info, &newbuffer);
+    
+    
+    if (status == noErr) {
+        return newbuffer;
+    }
+    return NULL;
+}
+
 - (void) appendSampleBuffer:(CMSampleBufferRef)sampleBuffer {
     
     if (_videoSource == FJ_DATA) {
         CVPixelBufferRef pixbuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
         CMVideoFormatDescriptionRef videoDes = CMSampleBufferGetFormatDescription(sampleBuffer);
+        
         if (pixbuffer) {
-            CMSampleBufferRef newBuffer = [self setupTimeStampForSampleBuffer:pixbuffer andDescription:videoDes];
+            CMSampleBufferRef newBuffer = [self setupTimeStampForVideoSampleBuffer:pixbuffer andDescription:videoDes];
             if (newBuffer) {
                 CFArrayAppendValue(_bufferArray, newBuffer);
                 CFRelease(newBuffer);
             }
         } else {
-            CMSampleBufferRef newbuffer = NULL;
-            CMSampleTimingInfo info;
-            info.decodeTimeStamp = CMTimeMake(_audioCount, _videoFPS);
-            info.duration = kCMTimeInvalid;
-            info.presentationTimeStamp = CMTimeMake(_audioCount, _videoFPS);
-        
-            OSStatus status = CMSampleBufferCreateCopyWithNewTiming(kCFAllocatorDefault, sampleBuffer, 1, &info, &newbuffer);
             
-            if (status == noErr) {
-                NSLog(@"hehe");
+            CMSampleBufferRef newbuffer = [self setupTimeStampForAudioSampleBuffer:sampleBuffer];
+            
+            if (newbuffer) {
                 _audioCount++;
                 CFArrayAppendValue(_bufferArray, newbuffer);
                 CFRelease(newbuffer);
@@ -309,9 +323,9 @@ CFMutableArrayRef CreateDispatchHoldingArray() {
                 NSDictionary *audioSetting = [NSDictionary dictionaryWithObjectsAndKeys:
                                               [NSNumber numberWithInt: kAudioFormatMPEG4AAC ], AVFormatIDKey,
                                               [NSNumber numberWithInt:64000], AVEncoderBitRateKey,
-                                              [NSNumber numberWithFloat: 44100.0 ], AVSampleRateKey,
+                                              [NSNumber numberWithFloat:44100.0], AVSampleRateKey,
                                               [NSNumber numberWithInt: 1 ], AVNumberOfChannelsKey,
-                                              [NSData dataWithBytes: &acl length: sizeof( acl ) ], AVChannelLayoutKey, nil];
+                                              [NSData dataWithBytes: &acl length: sizeof(acl) ], AVChannelLayoutKey, nil];
                 
                 _audioWriterInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeAudio outputSettings:audioSetting];
             }
@@ -460,7 +474,6 @@ CFMutableArrayRef CreateDispatchHoldingArray() {
                 if (pxBuffer) {
                     appendSuccess = [_videoWriterInput appendSampleBuffer:nextSampleBuffer];
                 } else {
-                    NSLog(@"hehe");
                     appendSuccess = [_audioWriterInput appendSampleBuffer:nextSampleBuffer];
                 }
                 
