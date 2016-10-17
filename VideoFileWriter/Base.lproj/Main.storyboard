@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
         <capability name="Alignment constraints to the first baseline" minToolsVersion="6.0"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
@@ -39,18 +38,28 @@
                                     <action selector="choosePixel:" destination="BYZ-38-t0r" eventType="touchUpInside" id="cMo-ww-Ymb"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yLv-xJ-Rgk">
+                                <state key="normal" title="videoPicker"/>
+                                <connections>
+                                    <action selector="chooseImagePicker:" destination="BYZ-38-t0r" eventType="touchUpInside" id="YZ7-hi-FGr"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="yLv-xJ-Rgk" firstAttribute="baseline" secondItem="lha-KA-uN8" secondAttribute="baseline" id="0d7-pz-s68"/>
                             <constraint firstAttribute="trailingMargin" secondItem="lha-KA-uN8" secondAttribute="trailing" constant="25" id="99c-ND-C0b"/>
                             <constraint firstAttribute="trailing" secondItem="NiY-2o-4er" secondAttribute="trailing" id="AV2-bh-eVt"/>
                             <constraint firstItem="lha-KA-uN8" firstAttribute="top" secondItem="NiY-2o-4er" secondAttribute="bottom" constant="8" symbolic="YES" id="Aoa-OC-nqY"/>
+                            <constraint firstItem="yLv-xJ-Rgk" firstAttribute="centerX" secondItem="NiY-2o-4er" secondAttribute="centerX" id="CGx-oC-0y7"/>
                             <constraint firstAttribute="bottom" secondItem="NiY-2o-4er" secondAttribute="bottom" constant="67" id="CQ6-4d-30s"/>
                             <constraint firstItem="7ux-Ht-wl8" firstAttribute="top" secondItem="NiY-2o-4er" secondAttribute="bottom" constant="8" symbolic="YES" id="Etw-jx-HW8"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="7ux-Ht-wl8" secondAttribute="bottom" constant="8" symbolic="YES" id="Vgn-3d-7cP"/>
+                            <constraint firstItem="yLv-xJ-Rgk" firstAttribute="firstBaseline" secondItem="7ux-Ht-wl8" secondAttribute="baseline" id="XAe-QZ-mz1"/>
                             <constraint firstItem="NiY-2o-4er" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="YSK-6C-zRl"/>
                             <constraint firstItem="7ux-Ht-wl8" firstAttribute="firstBaseline" secondItem="lha-KA-uN8" secondAttribute="baseline" id="a1c-Ke-FeW"/>
                             <constraint firstItem="7ux-Ht-wl8" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="34" id="bE9-qy-mVd"/>
+                            <constraint firstItem="yLv-xJ-Rgk" firstAttribute="centerY" secondItem="7ux-Ht-wl8" secondAttribute="centerY" id="ch4-92-CIA"/>
                             <constraint firstItem="7ux-Ht-wl8" firstAttribute="baseline" secondItem="lha-KA-uN8" secondAttribute="firstBaseline" id="nbM-aA-5Ci"/>
                             <constraint firstItem="NiY-2o-4er" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="uue-Ez-ASC"/>
                         </constraints>

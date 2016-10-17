@@ -21,10 +21,9 @@
 @property (strong, nonatomic) id object;
 @property (weak, nonatomic) UIView *disView;
 
-
-
 - (void) setupcaptureSession;
 - (void)startSession;
+- (void)stopSession;
 - (void)configureCameraForHighestFrameRate:(AVCaptureDevice *)device
                                withPostion:(AVCaptureDevicePosition) postion
                                    andTime:(CMTime) timeStamp;
@@ -98,6 +97,12 @@
 - (void)startSession {
     if(![_captureSession isRunning]) {
         [_captureSession startRunning];
+    }
+}
+
+- (void)stopSession {
+    if([_captureSession isRunning]) {
+        [_captureSession stopRunning];
     }
 }
 

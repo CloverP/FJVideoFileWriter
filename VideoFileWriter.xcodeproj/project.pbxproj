@@ -16,6 +16,11 @@
 		79B390BB1DB37AE7009D7747 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 79B390B91DB37AE7009D7747 /* LaunchScreen.storyboard */; };
 		79B390C41DB37B31009D7747 /* FJVideoFileWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B390C31DB37B31009D7747 /* FJVideoFileWriter.m */; };
 		79B390C81DB39FE3009D7747 /* FJVideoCapture.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B390C71DB39FE3009D7747 /* FJVideoCapture.m */; };
+		79C6E2671DB49C8500716E9E /* FJVideoFileReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 79C6E2661DB49C8500716E9E /* FJVideoFileReader.m */; };
+		79C6E26A1DB4A31400716E9E /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79C6E2691DB4A31400716E9E /* MobileCoreServices.framework */; };
+		79C6E26C1DB4A31F00716E9E /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79C6E26B1DB4A31F00716E9E /* AVFoundation.framework */; };
+		79C6E26E1DB4A32600716E9E /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79C6E26D1DB4A32600716E9E /* AVKit.framework */; };
+		79C6E2701DB4A32D00716E9E /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79C6E26F1DB4A32D00716E9E /* OpenGLES.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +39,12 @@
 		79B390C31DB37B31009D7747 /* FJVideoFileWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FJVideoFileWriter.m; sourceTree = "<group>"; };
 		79B390C61DB39FE3009D7747 /* FJVideoCapture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FJVideoCapture.h; sourceTree = "<group>"; };
 		79B390C71DB39FE3009D7747 /* FJVideoCapture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FJVideoCapture.m; sourceTree = "<group>"; };
+		79C6E2651DB49C8500716E9E /* FJVideoFileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FJVideoFileReader.h; sourceTree = "<group>"; };
+		79C6E2661DB49C8500716E9E /* FJVideoFileReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FJVideoFileReader.m; sourceTree = "<group>"; };
+		79C6E2691DB4A31400716E9E /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		79C6E26B1DB4A31F00716E9E /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		79C6E26D1DB4A32600716E9E /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
+		79C6E26F1DB4A32D00716E9E /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,6 +52,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				79C6E2701DB4A32D00716E9E /* OpenGLES.framework in Frameworks */,
+				79C6E26E1DB4A32600716E9E /* AVKit.framework in Frameworks */,
+				79C6E26C1DB4A31F00716E9E /* AVFoundation.framework in Frameworks */,
+				79C6E26A1DB4A31400716E9E /* MobileCoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -52,6 +67,7 @@
 			children = (
 				79B390A71DB37AE7009D7747 /* VideoFileWriter */,
 				79B390A61DB37AE7009D7747 /* Products */,
+				79C6E2681DB4A31400716E9E /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -66,9 +82,9 @@
 		79B390A71DB37AE7009D7747 /* VideoFileWriter */ = {
 			isa = PBXGroup;
 			children = (
-				79B390C51DB37B5F009D7747 /* Lib */,
-				79B390C61DB39FE3009D7747 /* FJVideoCapture.h */,
-				79B390C71DB39FE3009D7747 /* FJVideoCapture.m */,
+				79C6E2641DB49C5F00716E9E /* ReaderSrc */,
+				79C6E2631DB49C4100716E9E /* CaptureSrc */,
+				79B390C51DB37B5F009D7747 /* WriterSrc */,
 				79B390AB1DB37AE7009D7747 /* AppDelegate.h */,
 				79B390AC1DB37AE7009D7747 /* AppDelegate.m */,
 				79B390AE1DB37AE7009D7747 /* ViewController.h */,
@@ -91,13 +107,42 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		79B390C51DB37B5F009D7747 /* Lib */ = {
+		79B390C51DB37B5F009D7747 /* WriterSrc */ = {
 			isa = PBXGroup;
 			children = (
 				79B390C21DB37B31009D7747 /* FJVideoFileWriter.h */,
 				79B390C31DB37B31009D7747 /* FJVideoFileWriter.m */,
 			);
-			name = Lib;
+			name = WriterSrc;
+			sourceTree = "<group>";
+		};
+		79C6E2631DB49C4100716E9E /* CaptureSrc */ = {
+			isa = PBXGroup;
+			children = (
+				79B390C61DB39FE3009D7747 /* FJVideoCapture.h */,
+				79B390C71DB39FE3009D7747 /* FJVideoCapture.m */,
+			);
+			name = CaptureSrc;
+			sourceTree = "<group>";
+		};
+		79C6E2641DB49C5F00716E9E /* ReaderSrc */ = {
+			isa = PBXGroup;
+			children = (
+				79C6E2651DB49C8500716E9E /* FJVideoFileReader.h */,
+				79C6E2661DB49C8500716E9E /* FJVideoFileReader.m */,
+			);
+			name = ReaderSrc;
+			sourceTree = "<group>";
+		};
+		79C6E2681DB4A31400716E9E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				79C6E26F1DB4A32D00716E9E /* OpenGLES.framework */,
+				79C6E26D1DB4A32600716E9E /* AVKit.framework */,
+				79C6E26B1DB4A31F00716E9E /* AVFoundation.framework */,
+				79C6E2691DB4A31400716E9E /* MobileCoreServices.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -175,6 +220,7 @@
 				79B390C81DB39FE3009D7747 /* FJVideoCapture.m in Sources */,
 				79B390B61DB37AE7009D7747 /* VideoFileWriter.xcdatamodeld in Sources */,
 				79B390C41DB37B31009D7747 /* FJVideoFileWriter.m in Sources */,
+				79C6E2671DB49C8500716E9E /* FJVideoFileReader.m in Sources */,
 				79B390B01DB37AE7009D7747 /* ViewController.m in Sources */,
 				79B390AD1DB37AE7009D7747 /* AppDelegate.m in Sources */,
 				79B390AA1DB37AE7009D7747 /* main.m in Sources */,

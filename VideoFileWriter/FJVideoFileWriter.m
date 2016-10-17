@@ -103,7 +103,8 @@ CFMutableArrayRef CreateDispatchHoldingArray();
 
 - (void)video:(NSString *)videoPath didFinishSavingWithError:(NSError *)error
   contextInfo:(void *)contextInfo {
-    
+    [self clearAllVideos];
+    [self setFilePath];
 }
 
 - (void) stopWriting {
@@ -112,8 +113,6 @@ CFMutableArrayRef CreateDispatchHoldingArray();
         //deal the file with your own way.
         UISaveVideoAtPathToSavedPhotosAlbum(_fileUrl.relativePath, self, @selector(video:didFinishSavingWithError:contextInfo:), nil);
         [self removeVideoWriter];
-//        [self clearAllVideos];
-        [self setFilePath];
         [self setupVideoWriter];
         NSLog(@"Successfully closed video writer");
         
@@ -177,26 +176,29 @@ CFMutableArrayRef CreateDispatchHoldingArray();
 
 - (void) appendSampleBuffer:(CMSampleBufferRef)sampleBuffer {
     
-   
-    
-    CMSampleBufferRef newbuffer = NULL;
-    
-    CVPixelBufferRef pixbuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
-    
-    CMVideoFormatDescriptionRef videoDes = CMSampleBufferGetFormatDescription(sampleBuffer);
-    CMSampleTimingInfo info;
-    info.decodeTimeStamp = CMTimeMake(_frameCount, _videoFPS);
-    info.duration = kCMTimeInvalid;
-    info.presentationTimeStamp = CMTimeMake(_frameCount, _videoFPS);
-    
-    OSStatus status = CMSampleBufferCreateReadyWithImageBuffer(kCFAllocatorDefault, pixbuffer, videoDes, &info, &newbuffer);
-    
-    if (status == noErr) {
-        _frameCount++;
-        CFArrayAppendValue(_bufferArray, newbuffer);
-        CFRelease(newbuffer);
-        NSLog(@"count = %ld", CFArrayGetCount(_bufferArray));
+    if (_videoSource == FJ_DATA) {
+        CMSampleBufferRef newbuffer = NULL;
+        
+        CVPixelBufferRef pixbuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
+        
+        CMVideoFormatDescriptionRef videoDes = CMSampleBufferGetFormatDescription(sampleBuffer);
+        CMSampleTimingInfo info;
+        info.decodeTimeStamp = CMTimeMake(_frameCount, _videoFPS);
+        info.duration = kCMTimeInvalid;
+        info.presentationTimeStamp = CMTimeMake(_frameCount, _videoFPS);
+        
+        OSStatus status = CMSampleBufferCreateReadyWithImageBuffer(kCFAllocatorDefault, pixbuffer, videoDes, &info, &newbuffer);
+        
+        if (status == noErr) {
+            _frameCount++;
+            CFArrayAppendValue(_bufferArray, newbuffer);
+            CFRelease(newbuffer);
+        }
+    } else {
+        CFArrayAppendValue(_bufferArray, sampleBuffer);
     }
+    
+
     
 }
 

@@ -9,13 +9,20 @@
 #import "ViewController.h"
 #import "FJVideoFileWriter.h"
 #import "FJVideoCapture.h"
-@interface ViewController ()<AVCaptureVideoDataOutputSampleBufferDelegate>
+#import "FJVideoFileReader.h"
+
+#import <MobileCoreServices/MobileCoreServices.h>
+
+@interface ViewController ()<AVCaptureVideoDataOutputSampleBufferDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 @property (weak, nonatomic) IBOutlet UIView *displayView;
 @property (assign, nonatomic) BOOL isRecording;
 @property (strong, nonatomic) FJVideoCapture *videoCapture;
 @property (strong, nonatomic) FJVideoFileWriter *fileWriter;
+@property (strong, nonatomic) FJVideoFileReader *fileReader;
+@property (strong, nonatomic) NSURL *localVideoUrl;
 - (IBAction)choosePixel:(id)sender;
 - (IBAction)chooseSamBuffer:(id)sender;
+- (IBAction)chooseImagePicker:(id)sender;
 @end
 
 @implementation ViewController
@@ -25,7 +32,7 @@
     _isRecording = NO;
     
     _videoCapture = [[FJVideoCapture alloc] initWithDisplayView:_displayView andDelegate:self];
-    _fileWriter = [[FJVideoFileWriter alloc] initWithFileUrl:NULL BufferType:FJ_SAMPLEBUFFER VideoSize: CGSizeMake(720, 1280) andVideoSource:FJ_DATA];
+    _fileWriter = [[FJVideoFileWriter alloc] initWithFileUrl:NULL BufferType:FJ_SAMPLEBUFFER VideoSize: CGSizeMake(720, 1280) andVideoSource:FJ_FILE];
     // Do any additional setup after loading the view, typically from a nib.
 }
 
@@ -65,5 +72,50 @@
     _isRecording = !_isRecording;
     
     _isRecording? [_fileWriter startWriting]:[_fileWriter stopWriting];
+}
+
+- (IBAction)chooseImagePicker:(id)sender {
+    [self swipeToVideoPicker];
+}
+
+
+- (void) swipeToVideoPicker
+{
+    UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+    imagePicker.delegate = self;
+    imagePicker.allowsEditing = YES;
+    imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    imagePicker.mediaTypes =  [[NSArray alloc] initWithObjects: (NSString *)kUTTypeMovie, nil];
+    [self presentViewController:imagePicker animated:YES completion:nil];
+}
+
+#pragma mark -
+#pragma UIImagePickerController Delegate
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    if ([[info objectForKey:UIImagePickerControllerMediaType] isEqualToString:(NSString*)kUTTypeMovie]) {
+        _localVideoUrl = [info objectForKey:UIImagePickerControllerMediaURL];
+        _fileReader = [[FJVideoFileReader alloc] initWithSize:CGSizeMake(720, 1280) andFileUrl:_localVideoUrl];
+        
+    }
+    
+    [picker dismissViewControllerAnimated:YES completion:^{
+        [_fileWriter startWriting];
+        [_fileReader startReadingWithHandler:^(CMSampleBufferRef sampleBuffer) {
+            if (sampleBuffer) {
+                [_fileWriter appendSampleBuffer:sampleBuffer];
+                CFRelease(sampleBuffer);
+            } else {
+                [_fileWriter stopWriting];
+            }
+            
+        }];
+    }];
+}
+
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    [picker dismissViewControllerAnimated:YES completion:nil];
 }
 @end
