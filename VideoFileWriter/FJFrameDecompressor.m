@@ -65,7 +65,7 @@
             OSStatus decodeStatus = VTDecompressionSessionDecodeFrameWithOutputHandler(_deocderSession, sampleBuffer, flags, &flagOut, ^(OSStatus status, VTDecodeInfoFlags infoFlags, CVImageBufferRef  _Nullable imageBuffer, CMTime presentationTimeStamp, CMTime presentationDuration) {
                 
                 if (bufferBlock) {
-                    bufferBlock(imageBuffer);
+                    bufferBlock(imageBuffer, presentationTimeStamp);
                 }
             });
             
