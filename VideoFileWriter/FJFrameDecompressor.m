@@ -158,7 +158,7 @@
         NSDictionary* destinationPixelBufferAttributes = @{
                                                            (id)kCVPixelBufferPixelFormatTypeKey : [NSNumber numberWithInt:kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange],
                                                            //decompress type kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange
-                                                           //                                                           或者是kCVPixelFormatType_420YpCbCr8Planar
+                                                           //                                                          or kCVPixelFormatType_420YpCbCr8Planar
                                                            //iOS is  nv12  other is nv21
                                                            (id)kCVPixelBufferWidthKey : [NSNumber numberWithInt:_videoSize.width*2],
                                                            (id)kCVPixelBufferHeightKey : [NSNumber numberWithInt:_videoSize.height*2],

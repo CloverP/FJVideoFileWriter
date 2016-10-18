@@ -21,6 +21,8 @@
 @property (assign, nonatomic) CGSize videoSize;
 @property (assign, nonatomic) long frameCount;
 
+- (NSData *) addHeaderForData:(NSData *) data;
+
 - (void) removeCompressor;
 - (void) setupCompressor;
 
@@ -38,6 +40,7 @@
     return self;
     
 }
+
 - (void) compressBuffer:(CMSampleBufferRef) sampleBuffer
         withHeaderBlock:(FJHeaderCompressorDataBlock)headerBlock
           h264DataBlock:(FJFrameCompressorDataBlock)datablock
@@ -81,8 +84,11 @@
                     OSStatus statusCode = CMVideoFormatDescriptionGetH264ParameterSetAtIndex(format, 1, &pparameterSet, &pparameterSetSize, &pparameterSetCount, 0 );
                     if (statusCode == noErr)
                     {
-                        NSData *sps = [[NSData alloc] initWithBytes:sparameterSet length:sparameterSetSize];
-                        NSData *pps = [[NSData alloc] initWithBytes:pparameterSet length:pparameterSetSize];
+                        NSData *sps1 = [NSData dataWithBytes:sparameterSet length:sparameterSetSize];
+                        NSData *pps1 = [NSData dataWithBytes:pparameterSet length:pparameterSetSize];
+                        
+                        NSData *sps = [self addHeaderForData:sps1];
+                        NSData *pps = [self addHeaderForData:pps1];
 
                         if (headerBlock)
                         {
@@ -105,7 +111,9 @@
                     uint32_t NALUnitLength = 0;
                     memcpy(&NALUnitLength, dataPointer + bufferOffset, AVCCHeaderLength);
                     NALUnitLength = CFSwapInt32BigToHost(NALUnitLength);
-                    NSData* data = [[NSData alloc] initWithBytes:(dataPointer + bufferOffset + AVCCHeaderLength) length:NALUnitLength];
+                    NSData* data1 = [NSData dataWithBytes:(dataPointer + bufferOffset + AVCCHeaderLength) length:NALUnitLength];
+                    
+                    NSData *data = [self addHeaderForData:data1];
                     if (datablock) {
                         datablock(data);
                     }
@@ -127,6 +135,17 @@
             }
         }
     });
+}
+
+- (NSData *) addHeaderForData:(NSData *) data {
+    const char bytes[] = "\x00\x00\x00\x01";
+    size_t length = (sizeof bytes) - 1;
+    NSData *ByteHeader = [NSData dataWithBytes:bytes length:length];
+    NSMutableData *newData = [[NSMutableData alloc] init];
+    [newData appendData:ByteHeader];
+    [newData appendData:data];
+    
+    return newData;
 }
 
 - (void) setupCompressor {

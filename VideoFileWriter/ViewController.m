@@ -67,19 +67,25 @@
 //            [_fileWriter appendSampleBuffer:sampleBuffer];
             [_compressor compressBuffer:sampleBuffer
                         withHeaderBlock:^(NSData *spsData, NSData *ppsData) {
+                            
+                            
+                            
+                            
+                            
+                            
                             [_decompressor decompressData:(uint8_t *)spsData.bytes withSize:(uint32_t)spsData.length andBlock:nil];
-                            [_decompressor decompressData:(uint8_t *)ppsData.bytes withSize:(uint32_t)ppsData.bytes andBlock:nil];
+                            [_decompressor decompressData:(uint8_t *)ppsData.bytes withSize:(uint32_t)ppsData.length andBlock:nil];
                         }
                           h264DataBlock:^(NSData *h264Data) {
-                            [_decompressor decompressData:(uint8_t *)[h264Data bytes] withSize:(uint32_t)[h264Data length] andBlock:^(CVPixelBufferRef pixelBuffer, CMTime PTS, CMVideoFormatDescriptionRef videoFormatDescription) {
+                            [_decompressor decompressData:(uint8_t *)h264Data.bytes withSize:(uint32_t)h264Data.length andBlock:^(CVPixelBufferRef pixelBuffer, CMTime PTS, CMVideoFormatDescriptionRef videoFormatDescription) {
                                 
                                 CMSampleBufferRef buffer = NULL;
                                 CMSampleTimingInfo info;
-                                info.decodeTimeStamp = PTS;
+                                info.decodeTimeStamp = CMTimeMake(20, 600);
                                 info.duration = kCMTimeInvalid;
-                                info.presentationTimeStamp = PTS;
+                                info.presentationTimeStamp = CMTimeMake(20, 600);
                                 
-                                
+                                CMTimeShow(PTS);
                                 OSStatus status = CMSampleBufferCreateReadyWithImageBuffer(kCFAllocatorDefault, pixelBuffer, videoFormatDescription, &info, &buffer);
                                 
                                 NSLog(@" status = %d", status);
