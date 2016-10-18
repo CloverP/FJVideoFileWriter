@@ -18,9 +18,6 @@
 
 @property (strong, nonatomic) dispatch_queue_t compressQueue;
 
-@property (strong, nonatomic) NSData *sps;
-@property (strong, nonatomic) NSData *pps;
-
 @property (assign, nonatomic) CGSize videoSize;
 @property (assign, nonatomic) long frameCount;
 
@@ -84,8 +81,9 @@
                     OSStatus statusCode = CMVideoFormatDescriptionGetH264ParameterSetAtIndex(format, 1, &pparameterSet, &pparameterSetSize, &pparameterSetCount, 0 );
                     if (statusCode == noErr)
                     {
-                        NSData *sps = [NSData dataWithBytes:sparameterSet length:sparameterSetSize];
-                        NSData *pps = [NSData dataWithBytes:pparameterSet length:pparameterSetSize];
+                        NSData *sps = [[NSData alloc] initWithBytes:sparameterSet length:sparameterSetSize];
+                        NSData *pps = [[NSData alloc] initWithBytes:pparameterSet length:pparameterSetSize];
+
                         if (headerBlock)
                         {
                             headerBlock(sps, pps);
@@ -162,10 +160,7 @@
 
 - (void) removeCompressor {
     _EncodingSession = nil;
-    _compressQueue = nil;
-    _sps = nil;
-    _pps = nil;
-    
+    _compressQueue = nil;    
     _frameCount = 0;
 }
 

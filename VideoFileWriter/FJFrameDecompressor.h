@@ -14,7 +14,7 @@ typedef void(^FJFrameDecompressorBufferBlock)(CVPixelBufferRef pixelBuffer, CMTi
 
 @interface FJFrameDecompressor : NSObject
 
-- (instancetype) init;
+- (instancetype) initWithSize:(CGSize) videoSize;
 
 -(void) decompressData:(uint8_t *)data withSize:(uint32_t)dataLength andBlock:(FJFrameDecompressorBufferBlock)bufferBlock;
 

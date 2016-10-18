@@ -88,19 +88,18 @@
         return;
     }
     
-    //    NSLog(@">>>>>>>>>>开始解码");
-    int nalu_type = (data[4] & 0x1F);
+    int data_type = (data[4] & 0x1F);
     uint32_t nalSize = (uint32_t)(dataLength - 4);
     uint8_t *pNalSize = (uint8_t*)(&nalSize);
     data[0] = *(pNalSize + 3);
     data[1] = *(pNalSize + 2);
     data[2] = *(pNalSize + 1);
     data[3] = *(pNalSize);
-    //传输的时候。关键帧不能丢数据 否则绿屏   B/P可以丢  这样会卡顿
-    switch (nalu_type)
+    NSLog(@"type = %d", data_type);
+    switch (data_type)
     {
         case 0x05:
-            //           NSLog(@"nalu_type:%d Nal type is IDR frame",nalu_type);  //关键帧
+            //           NSLog(@"nalu_type:%d Nal type is IDR frame",nalu_type);
             if([self setupDecompressor])
             {
                 [self internalDecompressData:data withSize:dataLength andBlock:bufferBlock];

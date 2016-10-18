@@ -11,6 +11,7 @@
 #import "FJVideoCapture.h"
 #import "FJVideoFileReader.h"
 #import "FJFrameCompressor.h"
+#import "FJFrameDecompressor.h"
 
 #import <MobileCoreServices/MobileCoreServices.h>
 
@@ -23,6 +24,7 @@
 @property (strong, nonatomic) NSURL *localVideoUrl;
 
 @property (strong, nonatomic) FJFrameCompressor *compressor;
+@property (strong, nonatomic) FJFrameDecompressor *decompressor;
 - (IBAction)choosePixel:(id)sender;
 - (IBAction)chooseSamBuffer:(id)sender;
 - (IBAction)chooseImagePicker:(id)sender;
@@ -38,6 +40,7 @@
     _fileWriter = [[FJVideoFileWriter alloc] initWithFileUrl:NULL BufferType:FJ_MUXBUFFER VideoSize: CGSizeMake(720, 1280) andVideoSource:FJ_DATA];
     
     _compressor = [[FJFrameCompressor alloc] initWithSize:CGSizeMake(720, 1280)];
+    _decompressor = [[FJFrameDecompressor alloc] initWithSize:CGSizeMake(729, 1280)];
     // Do any additional setup after loading the view, typically from a nib.
 }
 
@@ -64,14 +67,25 @@
 //            [_fileWriter appendSampleBuffer:sampleBuffer];
             [_compressor compressBuffer:sampleBuffer
                         withHeaderBlock:^(NSData *spsData, NSData *ppsData) {
-                            
+                            [_decompressor decompressData:(uint8_t *)spsData.bytes withSize:(uint32_t)spsData.length andBlock:nil];
+                            [_decompressor decompressData:(uint8_t *)ppsData.bytes withSize:(uint32_t)ppsData.bytes andBlock:nil];
                         }
                           h264DataBlock:^(NSData *h264Data) {
-                              
+                            [_decompressor decompressData:(uint8_t *)[h264Data bytes] withSize:(uint32_t)[h264Data length] andBlock:^(CVPixelBufferRef pixelBuffer, CMTime PTS, CMVideoFormatDescriptionRef videoFormatDescription) {
+                                
+                                CMSampleBufferRef buffer = NULL;
+                                CMSampleTimingInfo info;
+                                info.decodeTimeStamp = PTS;
+                                info.duration = kCMTimeInvalid;
+                                info.presentationTimeStamp = PTS;
+                                
+                                
+                                OSStatus status = CMSampleBufferCreateReadyWithImageBuffer(kCFAllocatorDefault, pixelBuffer, videoFormatDescription, &info, &buffer);
+                                
+                                NSLog(@" status = %d", status);
+                            }];
                           }
-                         andBufferBlock:^(CMSampleBufferRef comSampleBuffer) {
-                             
-                         }];
+                         andBufferBlock:nil];
         } else {
 //            NSLog(@"audio");
             [_fileWriter appendSampleBuffer:sampleBuffer];
