@@ -17,6 +17,7 @@
 		79B390C41DB37B31009D7747 /* FJVideoFileWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B390C31DB37B31009D7747 /* FJVideoFileWriter.m */; };
 		79B390C81DB39FE3009D7747 /* FJVideoCapture.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B390C71DB39FE3009D7747 /* FJVideoCapture.m */; };
 		79B402851DB6419800A34B18 /* FJFrameCompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B402841DB6419800A34B18 /* FJFrameCompressor.m */; };
+		79B402881DB64F4F00A34B18 /* FJFrameDecompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B402871DB64F4F00A34B18 /* FJFrameDecompressor.m */; };
 		79C6E2671DB49C8500716E9E /* FJVideoFileReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 79C6E2661DB49C8500716E9E /* FJVideoFileReader.m */; };
 		79C6E26A1DB4A31400716E9E /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79C6E2691DB4A31400716E9E /* MobileCoreServices.framework */; };
 		79C6E26C1DB4A31F00716E9E /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79C6E26B1DB4A31F00716E9E /* AVFoundation.framework */; };
@@ -42,6 +43,8 @@
 		79B390C71DB39FE3009D7747 /* FJVideoCapture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FJVideoCapture.m; sourceTree = "<group>"; };
 		79B402831DB6419800A34B18 /* FJFrameCompressor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FJFrameCompressor.h; sourceTree = "<group>"; };
 		79B402841DB6419800A34B18 /* FJFrameCompressor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FJFrameCompressor.m; sourceTree = "<group>"; };
+		79B402861DB64F4F00A34B18 /* FJFrameDecompressor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FJFrameDecompressor.h; sourceTree = "<group>"; };
+		79B402871DB64F4F00A34B18 /* FJFrameDecompressor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FJFrameDecompressor.m; sourceTree = "<group>"; };
 		79C6E2651DB49C8500716E9E /* FJVideoFileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FJVideoFileReader.h; sourceTree = "<group>"; };
 		79C6E2661DB49C8500716E9E /* FJVideoFileReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FJVideoFileReader.m; sourceTree = "<group>"; };
 		79C6E2691DB4A31400716E9E /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
@@ -125,6 +128,8 @@
 			children = (
 				79B402831DB6419800A34B18 /* FJFrameCompressor.h */,
 				79B402841DB6419800A34B18 /* FJFrameCompressor.m */,
+				79B402861DB64F4F00A34B18 /* FJFrameDecompressor.h */,
+				79B402871DB64F4F00A34B18 /* FJFrameDecompressor.m */,
 			);
 			name = VideoToolBox;
 			sourceTree = "<group>";
@@ -234,6 +239,7 @@
 				79B390B61DB37AE7009D7747 /* VideoFileWriter.xcdatamodeld in Sources */,
 				79B390C41DB37B31009D7747 /* FJVideoFileWriter.m in Sources */,
 				79C6E2671DB49C8500716E9E /* FJVideoFileReader.m in Sources */,
+				79B402881DB64F4F00A34B18 /* FJFrameDecompressor.m in Sources */,
 				79B390B01DB37AE7009D7747 /* ViewController.m in Sources */,
 				79B390AD1DB37AE7009D7747 /* AppDelegate.m in Sources */,
 				79B402851DB6419800A34B18 /* FJFrameCompressor.m in Sources */,
