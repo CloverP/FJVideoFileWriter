@@ -10,7 +10,7 @@
 #import <VideoToolbox/VideoToolbox.h>
 #import <AVFoundation/AVFoundation.h>
 
-typedef void(^FJFrameDecompressorBufferBlock)(CVPixelBufferRef pixelBuffer, CMTime PTS);
+typedef void(^FJFrameDecompressorBufferBlock)(CVPixelBufferRef pixelBuffer, CMTime PTS, CMVideoFormatDescriptionRef videoFormatDescription);
 
 @interface FJFrameDecompressor : NSObject
 
