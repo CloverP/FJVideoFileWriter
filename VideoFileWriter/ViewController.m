@@ -10,6 +10,7 @@
 #import "FJVideoFileWriter.h"
 #import "FJVideoCapture.h"
 #import "FJVideoFileReader.h"
+#import "FJFrameCompressor.h"
 
 #import <MobileCoreServices/MobileCoreServices.h>
 
@@ -20,6 +21,8 @@
 @property (strong, nonatomic) FJVideoFileWriter *fileWriter;
 @property (strong, nonatomic) FJVideoFileReader *fileReader;
 @property (strong, nonatomic) NSURL *localVideoUrl;
+
+@property (strong, nonatomic) FJFrameCompressor *compressor;
 - (IBAction)choosePixel:(id)sender;
 - (IBAction)chooseSamBuffer:(id)sender;
 - (IBAction)chooseImagePicker:(id)sender;
@@ -33,6 +36,8 @@
     
     _videoCapture = [[FJVideoCapture alloc] initWithDisplayView:_displayView andDelegate:self];
     _fileWriter = [[FJVideoFileWriter alloc] initWithFileUrl:NULL BufferType:FJ_MUXBUFFER VideoSize: CGSizeMake(720, 1280) andVideoSource:FJ_DATA];
+    
+    _compressor = [[FJFrameCompressor alloc] initWithSize:CGSizeMake(720, 1280)];
     // Do any additional setup after loading the view, typically from a nib.
 }
 
@@ -56,7 +61,17 @@
         
         if (isvideo) {
 //            CVPixelBufferRef pxbuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
-            [_fileWriter appendSampleBuffer:sampleBuffer];
+//            [_fileWriter appendSampleBuffer:sampleBuffer];
+            [_compressor compressBuffer:sampleBuffer
+                        withHeaderBlock:^(NSData *spsData, NSData *ppsData) {
+                            
+                        }
+                          h264DataBlock:^(NSData *h264Data) {
+                              
+                          }
+                         andBufferBlock:^(CMSampleBufferRef comSampleBuffer) {
+                             
+                         }];
         } else {
 //            NSLog(@"audio");
             [_fileWriter appendSampleBuffer:sampleBuffer];
