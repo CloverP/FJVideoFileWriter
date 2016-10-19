@@ -157,12 +157,13 @@
     if(status == noErr) {
         NSDictionary* destinationPixelBufferAttributes = @{
                                                            (id)kCVPixelBufferPixelFormatTypeKey : [NSNumber numberWithInt:kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange],
-                                                           //decompress type kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange
-                                                           //                                                          or kCVPixelFormatType_420YpCbCr8Planar
-                                                           //iOS is  nv12  other is nv21
+                                                           /*decompress type kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange
+                                                            or kCVPixelFormatType_420YpCbCr8Planar
+                                                           iOS is  nv12  other is nv21 */
+                                                           
                                                            (id)kCVPixelBufferWidthKey : [NSNumber numberWithInt:_videoSize.width*2],
                                                            (id)kCVPixelBufferHeightKey : [NSNumber numberWithInt:_videoSize.height*2],
-                                                           //这里款高和编码反的
+                                                           
                                                            (id)kCVPixelBufferOpenGLCompatibilityKey : [NSNumber numberWithBool:YES]
                                                            };
         

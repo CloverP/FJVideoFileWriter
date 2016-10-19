@@ -40,7 +40,7 @@
     _fileWriter = [[FJVideoFileWriter alloc] initWithFileUrl:NULL BufferType:FJ_MUXBUFFER VideoSize: CGSizeMake(720, 1280) andVideoSource:FJ_DATA];
     
     _compressor = [[FJFrameCompressor alloc] initWithSize:CGSizeMake(720, 1280)];
-    _decompressor = [[FJFrameDecompressor alloc] initWithSize:CGSizeMake(729, 1280)];
+    _decompressor = [[FJFrameDecompressor alloc] initWithSize:CGSizeMake(720, 1280)];
     // Do any additional setup after loading the view, typically from a nib.
 }
 
@@ -67,28 +67,31 @@
 //            [_fileWriter appendSampleBuffer:sampleBuffer];
             [_compressor compressBuffer:sampleBuffer
                         withHeaderBlock:^(NSData *spsData, NSData *ppsData) {
-                            
-                            
-                            
-                            
-                            
-                            
                             [_decompressor decompressData:(uint8_t *)spsData.bytes withSize:(uint32_t)spsData.length andBlock:nil];
                             [_decompressor decompressData:(uint8_t *)ppsData.bytes withSize:(uint32_t)ppsData.length andBlock:nil];
                         }
                           h264DataBlock:^(NSData *h264Data) {
                             [_decompressor decompressData:(uint8_t *)h264Data.bytes withSize:(uint32_t)h264Data.length andBlock:^(CVPixelBufferRef pixelBuffer, CMTime PTS, CMVideoFormatDescriptionRef videoFormatDescription) {
+                                NSLog(@"width = %zu",CVPixelBufferGetWidth(pixelBuffer));
+                                NSLog(@"height = %zu",CVPixelBufferGetHeight(pixelBuffer));
+                                CMVideoFormatDescriptionRef des  = NULL;
+//                               OSStatus status = CMVideoFormatDescriptionCreate(kCFAllocatorDefault, kCMVideoCodecType_H264, (int32_t)CVPixelBufferGetWidth(pixelBuffer), (int32_t)CVPixelBufferGetHeight(pixelBuffer), NULL, &des);
+                                OSStatus status = CMVideoFormatDescriptionCreateForImageBuffer(kCFAllocatorDefault, pixelBuffer, &des);
                                 
-                                CMSampleBufferRef buffer = NULL;
-                                CMSampleTimingInfo info;
-                                info.decodeTimeStamp = CMTimeMake(20, 600);
-                                info.duration = kCMTimeInvalid;
-                                info.presentationTimeStamp = CMTimeMake(20, 600);
                                 
-                                CMTimeShow(PTS);
-                                OSStatus status = CMSampleBufferCreateReadyWithImageBuffer(kCFAllocatorDefault, pixelBuffer, videoFormatDescription, &info, &buffer);
                                 
-                                NSLog(@" status = %d", status);
+                                if (status == noErr) {
+                                    CMSampleBufferRef test = NULL;
+                                    CMSampleTimingInfo info = {kCMTimeInvalid,CMTimeMake(1, 30),CMTimeMake(1, 30)};
+                                    status = CMSampleBufferCreateReadyWithImageBuffer(kCFAllocatorDefault, pixelBuffer, des, &info, &test);
+//                                    status = CMSampleBufferCreateForImageBuffer(kCFAllocatorDefault, pixelBuffer, YES, NULL, NULL, des, &info, &test);
+                                    
+                                    CFRelease(des);
+                                    
+                                    if (status == noErr) {
+                                        NSLog(@"status = %d",(int)status);
+                                    }
+                                }
                             }];
                           }
                          andBufferBlock:nil];
